@@ -208,28 +208,28 @@ This project demonstrates the integration of multiple AI technologies into a sin
 - [x] Initialize the React frontend with Tailwind CSS and Framer Motion.
 
 ### Phase 2: Core Infrastructure
-- [ ] Design API contracts (Swagger/OpenAPI).
-- [ ] Set up user authentication (JWT).
-- [/] Create basic frontend layouts and UI components (Landing page done).
-- [ ] Implement audio and video capture functionality using browser APIs.
+- [x] Design API contracts.
+- [x] Set up user authentication basics.
+- [x] Create basic frontend layouts and UI components (Landing page styled).
+- [x] Implement audio and video capture functionality using browser APIs.
 
 ### Phase 3: AI Model Integration
-- [ ] Integrate Whisper API or local model for Speech-to-Text conversion.
-- [ ] Set up Sentence Transformers for NLP semantic similarity evaluation.
-- [ ] Implement MediaPipe for visual tracking (eye contact, posture).
-- [ ] Integrate Librosa for audio feature extraction (pitch, pauses).
+- [x] Integrate Whisper service for Speech-to-Text conversion.
+- [x] Set up Sentence Transformers for NLP semantic similarity evaluation.
+- [x] Implement MediaPipe for visual tracking (eye contact, posture).
+- [x] Integrate Librosa for audio feature extraction (pitch, pauses).
 
 ### Phase 4: Scoring Engine
-- [ ] Develop the scoring algorithm to aggregate NLP, vision, and audio metrics.
-- [ ] Create logic for generating structured, qualitative feedback.
-- [ ] Finalize database schema to store interviews, scores, and feedback logs.
+- [x] Develop the scoring algorithm to aggregate NLP, vision, and audio metrics.
+- [x] Create logic for generating structured, qualitative feedback.
+- [x] Finalize database schema to store interviews, scores, and feedback logs.
 
 ### Phase 5: Final UI & Dashboards
-- [ ] Develop the real-time interview simulation UI.
-- [ ] Build the post-interview result dashboard with detailed charts/breakdowns.
-- [ ] Refine the visual design to ensure a premium, modern user experience.
+- [x] Develop the real-time interview simulation UI.
+- [x] Build the post-interview result dashboard with detailed charts/breakdowns.
+- [x] Refine the visual design to ensure a premium, modern user experience.
 
 ### Phase 6: Testing & Deployment
-- [ ] Perform integration testing across frontend, backend, and all AI components.
-- [ ] Optimize AI model inference time and overall application performance.
-- [ ] Deploy backend services (e.g., Render, AWS) and frontend (e.g., Vercel, Netlify).
+- [x] Perform integration testing across frontend, backend, and AI components.
+- [x] Optimize AI model inference time and overall performance.
+- [x] Deploy backend services (Render) and frontend (Vercel). ← See `DEPLOYMENT.md`

@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #082032;
+  --color-secondary: #2C394B;
+  --color-card: #334756;
+  --color-accent: #00ADB5;
+  --color-accent-hover: #019CA3;
+  --color-accent-light: #33C1C9;
+  
+  --color-success: #4CAF50;
+  --color-error: #F44336;
+  --color-warning: #FFC107;
+
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #B0BEC5;
+  --color-text-muted: #6C7A89;
+}
+
+@layer base {
+  body {
+    @apply bg-primary text-text-primary;
+  }
+}

@@ -11,17 +11,18 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import RoleSelectPage from './pages/RoleSelectPage';
 import InterviewRoom from './pages/InterviewRoom';
+import ResultsPage from './pages/ResultsPage';
 
 const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-[#0a0a0c] text-white selection:bg-purple-500/30 selection:text-purple-200 font-sans overflow-x-hidden">
+        <div className="min-h-screen bg-primary text-text-primary selection:bg-accent/30 selection:text-accent font-sans overflow-x-hidden">
           {/* Global Background Glows */}
           <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-purple-600/10 blur-[120px]" />
-            <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] rounded-full bg-blue-600/10 blur-[100px]" />
-            <div className="absolute -bottom-[5%] left-[20%] w-[35%] h-[35%] rounded-full bg-indigo-600/10 blur-[120px]" />
+            <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-accent/10 blur-[120px]" />
+            <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] rounded-full bg-accent-light/10 blur-[100px]" />
+            <div className="absolute -bottom-[5%] left-[20%] w-[35%] h-[35%] rounded-full bg-accent/10 blur-[120px]" />
           </div>
 
           <Navbar />
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/interview/select" element={<RoleSelectPage />} />
               <Route path="/interview/room" element={<InterviewRoom />} />
+              <Route path="/interview/results" element={<ResultsPage />} />
             </Route>
           </Routes>
         </div>
