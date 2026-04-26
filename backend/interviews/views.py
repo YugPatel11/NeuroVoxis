@@ -1,18 +1,16 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.db.models import Avg
 from .models import JobRole, InterviewQuestion, InterviewSession, InterviewResponse
 from .serializers import (
     JobRoleSerializer, InterviewQuestionSerializer,
     InterviewSessionSerializer, InterviewResponseSerializer
 )
-import random
 import time
 from evaluations.models import Evaluation, SessionReport
 from ai_services.feedback_service import FeedbackService
-from ai_services.feedback_service import FeedbackService
 from ai_services.pipeline import AIPipeline
-from .serializers import InterviewSessionSerializer
 
 
 class JobRoleListView(generics.ListAPIView):
@@ -105,6 +103,14 @@ class FinishInterviewView(APIView):
                     'overall_feedback': overall_fb['summary'],
                 }
             )
+
+            # Update UserProfile stats
+            profile = request.user.profile
+            all_reports = SessionReport.objects.filter(session__user=request.user)
+            profile.total_interviews = all_reports.count()
+            avg = all_reports.aggregate(Avg('final_score'))['final_score__avg']
+            profile.average_score = round(avg, 2) if avg else 0
+            profile.save(update_fields=['total_interviews', 'average_score'])
 
             return Response({
                 "report": {

@@ -213,26 +213,29 @@ This project demonstrates the integration of multiple AI technologies into a sin
 - [x] Create basic frontend layouts and UI components (Landing page styled).
 - [x] Implement audio and video capture functionality using browser APIs.
 
-### Phase 3: AI Model Integration (Integrated Code)
-- [x] Implement media extraction pipeline (FFmpeg/MoviePy) to separate audio from video.
+### Phase 3: AI Model Integration ✅
+- [x] Implement media extraction pipeline (MoviePy) to separate audio from video.
 - [x] Connect Whisper service for Speech-to-Text conversion on extracted audio.
 - [x] Connect Sentence Transformers for NLP semantic similarity evaluation.
-- [x] Connect MediaPipe for visual tracking (eye contact, posture).
+- [x] Connect MediaPipe for visual tracking (eye contact, posture) with graceful fallback.
 - [x] Connect Librosa for audio feature extraction (pitch, pauses).
-- [x] Implement asynchronous processing (background tasks) to prevent HTTP timeouts.
+- [x] Implement asynchronous processing (background threads) to prevent HTTP timeouts.
+- [x] Configurable model cache via `USE_LOCAL_MODEL_CACHE` env variable.
 
-### Phase 4: Scoring Engine (Integrated Code)
+### Phase 4: Scoring Engine ✅
 - [x] Replace mocked random scores with real AI model outputs.
 - [x] Finalize scoring algorithm to aggregate real NLP, vision, and audio metrics.
 - [x] Connect real logic for generating structured, qualitative feedback based on metrics.
 - [x] Finalize database schema to store interviews, scores, and feedback logs.
+- [x] Auto-update UserProfile stats (total_interviews, average_score) after each interview.
 
-### Phase 5: Final UI & Dashboards
+### Phase 5: Final UI & Dashboards ✅
 - [x] Develop the real-time interview simulation UI.
 - [x] Build the post-interview result dashboard with detailed charts/breakdowns.
+- [x] Connect Dashboard to real API data (performance chart, recent activity, stats).
 - [x] Refine the visual design to ensure a premium, modern user experience.
 
 ### Phase 6: Testing & Deployment
 - [x] Perform integration testing across frontend, backend, and AI components.
-- [x] Optimize AI model inference time and overall performance.
-- [x] Deploy backend services (Render) and frontend (Vercel). ← See `DEPLOYMENT.md`
+- [x] Create `.gitignore` to exclude venv, model_cache, media, and __pycache__.
+- [ ] Deploy backend services (Render) and frontend (Vercel). ← See `DEPLOYMENT.md`

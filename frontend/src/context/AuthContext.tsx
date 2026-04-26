@@ -5,6 +5,8 @@ interface User {
   username: string;
   email: string;
   target_role?: string;
+  total_interviews?: number;
+  average_score?: number;
 }
 
 interface AuthContextType {

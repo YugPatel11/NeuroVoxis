@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Play, 
@@ -7,22 +7,71 @@ import {
   Award, 
   Clock, 
   ChevronRight,
-  Plus
+  Plus,
+  Loader2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import client from '../api/client';
 
-const data = [
-  { name: 'Int 1', score: 65 },
-  { name: 'Int 2', score: 72 },
-  { name: 'Int 3', score: 68 },
-  { name: 'Int 4', score: 85 },
-  { name: 'Int 5', score: 82 },
-];
+interface SessionHistory {
+  id: number;
+  role_name: string;
+  status: string;
+  started_at: string;
+  score: number | null;
+}
 
 const DashboardPage = () => {
   const { user } = useAuth();
+  const [history, setHistory] = useState<SessionHistory[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(true);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await client.get('interviews/history/');
+        setHistory(res.data);
+      } catch (err) {
+        console.error('Failed to fetch history', err);
+      } finally {
+        setLoadingHistory(false);
+      }
+    };
+    fetchHistory();
+  }, []);
+
+  // Build chart data from real history (completed sessions with scores)
+  const chartData = history
+    .filter((s) => s.status === 'completed' && s.score !== null)
+    .slice(-10)
+    .map((s, i) => ({
+      name: `Int ${i + 1}`,
+      score: Math.round(s.score!),
+    }));
+
+  // Recent activity — last 5 sessions
+  const recentSessions = history.slice(0, 5);
+
+  const formatTimeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins} min ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  };
+
+  const skillLevel = () => {
+    const avg = user?.average_score || 0;
+    if (avg >= 85) return 'Expert';
+    if (avg >= 70) return 'Advanced';
+    if (avg >= 50) return 'Intermediate';
+    if (avg > 0) return 'Beginner';
+    return 'New';
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
@@ -43,9 +92,9 @@ const DashboardPage = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[
-          { label: 'Average Score', value: user?.average_score || '0', icon: <TrendingUp className="text-success" />, color: 'success' },
+          { label: 'Average Score', value: user?.average_score ? Math.round(user.average_score) : '0', icon: <TrendingUp className="text-success" />, color: 'success' },
           { label: 'Interviews Done', value: user?.total_interviews || '0', icon: <History className="text-accent" />, color: 'accent' },
-          { label: 'Skill Level', value: 'Intermediate', icon: <Award className="text-accent-light" />, color: 'accent-light' },
+          { label: 'Skill Level', value: skillLevel(), icon: <Award className="text-accent-light" />, color: 'accent-light' },
         ].map((stat, i) => (
           <motion.div
             key={i}
@@ -70,18 +119,24 @@ const DashboardPage = () => {
         <div className="lg:col-span-2 p-8 rounded-[2.5rem] bg-card/20 border border-white/10 backdrop-blur-sm">
           <h3 className="text-xl font-bold mb-8 text-text-primary">Performance Trend</h3>
           <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
-                <XAxis dataKey="name" stroke="#B0BEC5" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#B0BEC5" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#2C394B', border: '1px solid #ffffff10', borderRadius: '12px' }}
-                  itemStyle={{ color: '#00ADB5' }}
-                />
-                <Line type="monotone" dataKey="score" stroke="#00ADB5" strokeWidth={3} dot={{ fill: '#00ADB5', strokeWidth: 2, r: 4 }} activeDot={{ r: 6, strokeWidth: 0 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" vertical={false} />
+                  <XAxis dataKey="name" stroke="#B0BEC5" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#B0BEC5" fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#2C394B', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                    itemStyle={{ color: '#00ADB5' }}
+                  />
+                  <Line type="monotone" dataKey="score" stroke="#00ADB5" strokeWidth={3} dot={{ fill: '#00ADB5', strokeWidth: 2, r: 4 }} activeDot={{ r: 6, strokeWidth: 0 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-text-muted italic">Complete your first interview to see your performance trend.</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -89,27 +144,33 @@ const DashboardPage = () => {
         <div className="p-8 rounded-[2.5rem] bg-card/20 border border-white/10 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-bold text-text-primary">Recent Activity</h3>
-            <Link to="#" className="text-sm text-accent hover:text-accent-hover transition-colors">View All</Link>
           </div>
           <div className="space-y-6">
-            {[1, 2, 3].map((_, i) => (
-              <div key={i} className="flex items-center gap-4 group cursor-pointer">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-accent/30 transition-all">
-                  <Clock className="w-5 h-5 text-text-secondary group-hover:text-accent" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold text-sm mb-1 text-text-primary">Python Developer</p>
-                  <p className="text-xs text-text-muted">2 days ago • 15 mins</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-sm text-accent">82%</p>
-                  <p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">Score</p>
-                </div>
+            {loadingHistory ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="w-6 h-6 text-accent animate-spin" />
               </div>
-            ))}
-            <div className="pt-4 border-t border-white/5">
-              <p className="text-center text-sm text-text-muted italic">More activity will appear here as you practice.</p>
-            </div>
+            ) : recentSessions.length > 0 ? (
+              recentSessions.map((session) => (
+                <div key={session.id} className="flex items-center gap-4 group cursor-pointer">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-accent/30 transition-all">
+                    <Clock className="w-5 h-5 text-text-secondary group-hover:text-accent" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-sm mb-1 text-text-primary">{session.role_name}</p>
+                    <p className="text-xs text-text-muted">{formatTimeAgo(session.started_at)} • {session.status}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-sm text-accent">{session.score !== null ? `${Math.round(session.score)}%` : '—'}</p>
+                    <p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">Score</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="pt-4">
+                <p className="text-center text-sm text-text-muted italic">No interviews yet. Start one to see your activity here!</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
