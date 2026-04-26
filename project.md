@@ -213,15 +213,18 @@ This project demonstrates the integration of multiple AI technologies into a sin
 - [x] Create basic frontend layouts and UI components (Landing page styled).
 - [x] Implement audio and video capture functionality using browser APIs.
 
-### Phase 3: AI Model Integration
-- [x] Integrate Whisper service for Speech-to-Text conversion.
-- [x] Set up Sentence Transformers for NLP semantic similarity evaluation.
-- [x] Implement MediaPipe for visual tracking (eye contact, posture).
-- [x] Integrate Librosa for audio feature extraction (pitch, pauses).
+### Phase 3: AI Model Integration (Integrated Code)
+- [x] Implement media extraction pipeline (FFmpeg/MoviePy) to separate audio from video.
+- [x] Connect Whisper service for Speech-to-Text conversion on extracted audio.
+- [x] Connect Sentence Transformers for NLP semantic similarity evaluation.
+- [x] Connect MediaPipe for visual tracking (eye contact, posture).
+- [x] Connect Librosa for audio feature extraction (pitch, pauses).
+- [x] Implement asynchronous processing (background tasks) to prevent HTTP timeouts.
 
-### Phase 4: Scoring Engine
-- [x] Develop the scoring algorithm to aggregate NLP, vision, and audio metrics.
-- [x] Create logic for generating structured, qualitative feedback.
+### Phase 4: Scoring Engine (Integrated Code)
+- [x] Replace mocked random scores with real AI model outputs.
+- [x] Finalize scoring algorithm to aggregate real NLP, vision, and audio metrics.
+- [x] Connect real logic for generating structured, qualitative feedback based on metrics.
 - [x] Finalize database schema to store interviews, scores, and feedback logs.
 
 ### Phase 5: Final UI & Dashboards

@@ -7,3 +7,4 @@ whisper
 sentence-transformers
 mediapipe
 librosa
+moviepy

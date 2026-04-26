@@ -7,8 +7,10 @@ from .serializers import (
     InterviewSessionSerializer, InterviewResponseSerializer
 )
 import random
+import time
 from evaluations.models import Evaluation, SessionReport
 from ai_services.feedback_service import FeedbackService
+from ai_services.pipeline import AIPipeline
 
 
 class JobRoleListView(generics.ListAPIView):
@@ -42,7 +44,15 @@ class SubmitResponseView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        response = super().create(request, *args, **kwargs)
+        # response.data contains the serialized InterviewResponse
+        response_id = response.data.get('id')
+        
+        if response_id:
+            pipeline = AIPipeline()
+            pipeline.process_response_async(response_id)
+            
+        return response
 
 
 class SessionDetailView(generics.RetrieveAPIView):
@@ -65,29 +75,15 @@ class FinishInterviewView(APIView):
         session.status = 'completed'
         session.save()
 
+        # Wait for background threads to finish processing evaluations (timeout after 60s)
+        for _ in range(30):
+            evals_count = Evaluation.objects.filter(response__session=session).count()
+            responses_count = session.responses.count()
+            if evals_count >= responses_count and responses_count > 0:
+                break
+            time.sleep(2)
+
         feedback_svc = FeedbackService()
-        responses = session.responses.all()
-
-        for response in responses:
-            ans = random.uniform(55, 95)
-            conf = random.uniform(55, 95)
-            comm = random.uniform(55, 95)
-            overall = round(ans * 0.3 + conf * 0.4 + comm * 0.3, 2)
-            fb = feedback_svc.generate(ans, conf, comm, overall)
-
-            Evaluation.objects.update_or_create(
-                response=response,
-                defaults={
-                    'answer_score': round(ans, 2),
-                    'confidence_score': round(conf, 2),
-                    'communication_score': round(comm, 2),
-                    'overall_score': overall,
-                    'strengths': fb['strengths'],
-                    'weaknesses': fb['weaknesses'],
-                    'suggestions': fb['suggestions'],
-                }
-            )
-
         evaluations = list(Evaluation.objects.filter(response__session=session))
 
         if evaluations:
