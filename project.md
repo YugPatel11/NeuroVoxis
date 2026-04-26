@@ -59,7 +59,7 @@ Final Score + Feedback Output
 - Librosa (Audio Feature Extraction)
 
 ### Database
-- use default django db and use PostgreSQL for production level deployment
+- Use default Django DB (SQLite) for development; PostgreSQL for production level deployment.
 
 ---
 
@@ -202,15 +202,15 @@ This project demonstrates the integration of multiple AI technologies into a sin
 ## 📅 Implementation Plan
 
 ### Phase 1: Planning & Setup
-- [ ] Define precise product requirements and user stories.
-- [ ] Initialize Git repository and setup CI/CD pipeline.
-- [ ] Set up the Django backend environment and PostgreSQL database.
-- [ ] Initialize the React frontend with Tailwind CSS.
+- [x] Define precise product requirements and user stories.
+- [x] Initialize Git repository and setup basic project structure.
+- [x] Set up the Django backend environment with SQLite.
+- [x] Initialize the React frontend with Tailwind CSS and Framer Motion.
 
 ### Phase 2: Core Infrastructure
 - [ ] Design API contracts (Swagger/OpenAPI).
 - [ ] Set up user authentication (JWT).
-- [ ] Create basic frontend layouts, routing, and UI components.
+- [/] Create basic frontend layouts and UI components (Landing page done).
 - [ ] Implement audio and video capture functionality using browser APIs.
 
 ### Phase 3: AI Model Integration
