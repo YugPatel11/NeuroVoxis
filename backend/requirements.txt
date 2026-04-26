@@ -3,7 +3,7 @@ djangorestframework
 django-cors-headers
 djangorestframework-simplejwt
 drf-spectacular
-whisper
+openai-whisper
 sentence-transformers
 mediapipe
 librosa

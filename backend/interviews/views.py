@@ -10,7 +10,9 @@ import random
 import time
 from evaluations.models import Evaluation, SessionReport
 from ai_services.feedback_service import FeedbackService
+from ai_services.feedback_service import FeedbackService
 from ai_services.pipeline import AIPipeline
+from .serializers import InterviewSessionSerializer
 
 
 class JobRoleListView(generics.ListAPIView):
@@ -118,3 +120,10 @@ class FinishInterviewView(APIView):
             }, status=status.HTTP_200_OK)
 
         return Response({"report": None, "message": "No responses found."}, status=status.HTTP_200_OK)
+
+class UserInterviewHistoryView(generics.ListAPIView):
+    serializer_class = InterviewSessionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return InterviewSession.objects.filter(user=self.request.user).order_by('-started_at')

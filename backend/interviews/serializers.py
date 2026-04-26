@@ -19,8 +19,9 @@ class InterviewResponseSerializer(serializers.ModelSerializer):
 class InterviewSessionSerializer(serializers.ModelSerializer):
     role_name = serializers.CharField(source='role.name', read_only=True)
     responses = InterviewResponseSerializer(many=True, read_only=True)
+    score = serializers.FloatField(source='report.final_score', read_only=True)
 
     class Meta:
         model = InterviewSession
-        fields = ['id', 'role', 'role_name', 'status', 'started_at', 'completed_at', 'responses']
+        fields = ['id', 'role', 'role_name', 'status', 'started_at', 'completed_at', 'responses', 'score']
         read_only_fields = ['status', 'started_at', 'completed_at']

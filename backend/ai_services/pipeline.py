@@ -2,7 +2,7 @@ import os
 import threading
 import tempfile
 from django.conf import settings
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 import cv2
 
 from evaluations.models import Evaluation
