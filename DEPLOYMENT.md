@@ -1,66 +1,43 @@
+# NeuroVoxis Single-Service Deployment Guide
 
-# NeuroVoxis Backend — Deployment Guide (Phase 6)
+## 1. Render Configuration (Unified Service)
+Connect your GitHub repo and configure the following:
 
-## 1. Production Requirements
-```
-gunicorn
-whitenoise
-dj-database-url
-psycopg2-binary
-python-decouple
-```
+- **Service Type**: Web Service
+- **Name**: `neurovoxis-app`
+- **Root Directory**: (Leave blank - use repo root)
+- **Environment**: `Python 3`
+- **Build Command**: `./build.sh`
+- **Start Command**: `gunicorn --chdir backend core.wsgi`
 
-## 2. `settings.py` Production Changes
-```python
-import dj_database_url
-from decouple import config
+### Required Environment Variables (Render Dashboard):
+- `PYTHON_VERSION`: `3.13`
+- `NODE_VERSION`: `20.x` (or your local version)
+- `SECRET_KEY`: (Generate a secure random string)
+- `DEBUG`: `False`
+- `ALLOWED_HOSTS`: `your-app-name.onrender.com`
+- `DATABASE_URL`: (Your PostgreSQL URL)
 
-DEBUG = config('DEBUG', default=False, cast=bool)
-SECRET_KEY = config('SECRET_KEY')
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+---
 
-DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
-}
+## 2. Why This Works
+- **WhiteNoise**: Django is now configured to serve the React files directly from `frontend/dist`.
+- **Catch-all Routing**: Any request that isn't for an API or the Admin panel is automatically redirected to the React `index.html`.
+- **Unified Build**: The `build.sh` script automatically installs both Node and Python dependencies and builds both parts of your app.
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+---
 
-MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    ...
-]
-```
+## 3. Database
+1. Create a **PostgreSQL** instance on Render.
+2. Link the **Internal Database URL** to the backend's `DATABASE_URL` env variable.
 
-## 3. Gunicorn Start Command
-```bash
-gunicorn core.wsgi:application --bind 0.0.0.0:8000
-```
+---
 
-## 4. Environment Variables (.env)
-```
-SECRET_KEY=your-secret-key-here
-DEBUG=False
-DATABASE_URL=postgres://user:password@host:5432/neurovoxis
-ALLOWED_HOSTS=your-domain.com
-```
-
-## 5. Frontend Deployment (Vercel)
-```bash
-npm run build
-# then push to GitHub and connect to Vercel
-# Set env variable: VITE_API_URL=https://your-backend-domain.com/api/
-```
-
-## 6. Backend Deployment (Render)
-- New Web Service → connect GitHub repo
-- Build Command: `pip install -r requirements.txt`
-- Start Command: `gunicorn core.wsgi:application`
-- Add PostgreSQL database from Render dashboard
-
-## 7. Final Checklist
-- [ ] Set DEBUG=False in production
-- [ ] Migrate DB: `python manage.py migrate`
-- [ ] Collect static: `python manage.py collectstatic`
-- [ ] Run tests: `python manage.py test`
-- [ ] Set CORS headers for frontend domain
+## 4. Local Testing
+To test this "Production Mode" locally:
+1. `cd frontend && npm run build`
+2. `cd ../backend`
+3. `set DEBUG=False`
+4. `python manage.py collectstatic --no-input`
+5. `python manage.py runserver`
+Your React app should now be accessible at `http://localhost:8000`.
