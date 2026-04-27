@@ -1,42 +1,56 @@
+# Virtual Environment
+venv/
+.venv/
+ENV/
+env/
+
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
-*.egg-info/
-dist/
-build/
-*.egg
-
-# Virtual environments
-venv/
-env/
-.venv/
+*.pyd
+*.db
+db.sqlite3
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Django
-*.sqlite3
-backend/media/
-backend/model_cache/
-backend/staticfiles/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
 
-# Environment variables
+# Node / React
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+.eslintcache
+
+# Environment Variables
 .env
-*.env
+.env.local
+.env.*.local
 
-# IDE
+# AI Models & Cache
+model_cache/
+hf_cache/
+.cache/
+
+# IDEs & System
 .vscode/
 .idea/
-*.swp
-*.swo
-
-# OS
 .DS_Store
-Thumbs.db
+*.swp
+*.bak
+*.tmp
 
-# Node
-node_modules/
+# NeuroVoxis Specific
+backend/media/
+backend/db.sqlite3
+backend/model_cache/
 frontend/node_modules/
 frontend/dist/
-
-# Logs
-*.log
-npm-debug.log*
