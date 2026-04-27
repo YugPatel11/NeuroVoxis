@@ -11,3 +11,4 @@ moviepy
 gunicorn
 dj-database-url
 whitenoise
+psycopg[binary]
