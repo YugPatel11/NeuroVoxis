@@ -16,6 +16,7 @@ import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+FRONTEND_DIR = BASE_DIR.parent / "frontend"
 
 
 # Quick-start development settings - unsuitable for production
@@ -133,7 +134,6 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Point to the frontend's build folder
-FRONTEND_DIR = BASE_DIR.parent / "frontend"
 STATICFILES_DIRS = [
     FRONTEND_DIR / "dist",
 ]
