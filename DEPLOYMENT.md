@@ -29,7 +29,7 @@ Connect your GitHub repo and configure the following:
 
 ## 3. Database
 1. Create a **PostgreSQL** instance on Render.
-2. Link the **Internal Database URL** to the backend's `DATABASE_URL` env variable.
+2. Link the **External Database URL** to the backend's `DATABASE_URL` env variable (External is more reliable during the build phase).
 
 ---
 
